@@ -7,8 +7,13 @@ public class Main {
     public static void main(String[] args) {
         User newUser = new User();
         newUser.setUserName("szymon");
-        newUser.setEmail("szymon@mail.com1");
+        newUser.setEmail("szymon@mail.com");
         newUser.setPassword("haslo");
+
+        User newUser2 = new User();
+        newUser2.setUserName("szymon");
+        newUser2.setEmail("szymon@mail2.com");
+        newUser2.setPassword("haslo");
 
         User nullUser = new User();
         nullUser.setId(100000);
@@ -28,11 +33,12 @@ public class Main {
         //Testing create method
         System.out.println("CREATE method:");
         createUser(newUser);
+        createUser(newUser2);
 
         //Testing read method
         System.out.println("READ method:");
-        readUser(1);        //User obj
-        readUser(10000);    //null
+        readUser(newUser.getId());        //User obj
+        readUser(nullUser.getId());    //null
 
         //Testing update method
         System.out.println("UPDATE method:");
@@ -42,6 +48,9 @@ public class Main {
 
         //Testing delete method
         System.out.println("DELETE method:");
+        deleteUser(newUser.getId());    //Deleting existing user
+        readUser(newUser.getId());      //Expect null
+        deleteUser(nullUser.getId());   //Deleting non-existing user
     }
 
     static void createUser(User user) {
@@ -56,6 +65,11 @@ public class Main {
 
     static void updateUser(User user) {
         UserDAO userDAO = new UserDAO();
-        System.out.println(userDAO.update(user));
+        userDAO.update(user);
+    }
+
+    static void deleteUser(int id) {
+        UserDAO userDAO = new UserDAO();
+        userDAO.delete(id);
     }
 }

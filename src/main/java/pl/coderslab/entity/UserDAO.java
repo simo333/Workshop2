@@ -9,7 +9,9 @@ public class UserDAO {
     private static final String CREATE_USER_QUERY =
             "INSERT INTO users(username, email, password) VALUES (?, ?, ?)";
     private static final String READ_USER_QUERY = "SELECT * FROM users WHERE id = ?";
-    private static final String UPDATE_USER_QUERY = "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?";
+    private static final String UPDATE_USER_QUERY =
+            "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?";
+    private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id = ?";
 
     public User create(User user) {
         try (Connection conn = DbUtil.getConnection()) {
@@ -52,21 +54,33 @@ public class UserDAO {
         }
     }
 
-    public User update(User user) {
+    public void update(User user) {
         try (Connection conn = DbUtil.getConnection();
              PreparedStatement statement = conn.prepareStatement(UPDATE_USER_QUERY)) {
             if (read(user.getId()) == null) {
-                return null;
+                return;
             }
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPassword());
             statement.setInt(4, user.getId());
-            statement.executeUpdate();
-            return user;
+            try {
+                statement.executeUpdate();
+            } catch (SQLIntegrityConstraintViolationException e) {
+                System.out.println(e.getMessage());
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+        }
+    }
+
+    public void delete(int userId) {
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement statement = conn.prepareStatement(DELETE_USER_QUERY)) {
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
