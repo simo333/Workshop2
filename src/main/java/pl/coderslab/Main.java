@@ -3,6 +3,8 @@ package pl.coderslab;
 import pl.coderslab.entity.User;
 import pl.coderslab.entity.UserDAO;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
         User newUser = new User();
@@ -51,6 +53,10 @@ public class Main {
         deleteUser(newUser.getId());    //Deleting existing user
         readUser(newUser.getId());      //Expect null
         deleteUser(nullUser.getId());   //Deleting non-existing user
+
+        //Testing findAll method
+        System.out.println("FINDALL method:");
+        findAllUser();
     }
 
     static void createUser(User user) {
@@ -72,4 +78,10 @@ public class Main {
         UserDAO userDAO = new UserDAO();
         userDAO.delete(id);
     }
+
+    static void findAllUser() {
+        UserDAO userDAO = new UserDAO();
+        System.out.println(Arrays.toString(userDAO.findAll()));
+    }
+
 }
