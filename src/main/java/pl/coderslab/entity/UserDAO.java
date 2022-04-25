@@ -9,6 +9,8 @@ public class UserDAO {
     private static final String CREATE_USER_QUERY =
             "INSERT INTO users(username, email, password) VALUES (?, ?, ?)";
 
+    private static final String READ_USER_QUERY = "SELECT * FROM users WHERE id = ?";
+
     public User create(User user) {
         try (Connection conn = DbUtil.getConnection()) {
             PreparedStatement statement =
@@ -28,6 +30,28 @@ public class UserDAO {
             return null;
         }
     }
+
+    public User read(int userId) {
+        User user = new User();
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement statement = conn.prepareStatement(READ_USER_QUERY)) {
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()) {
+                user.setId(resultSet.getInt("id"));
+                user.setUserName(resultSet.getString("username"));
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("password"));
+                return user;
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     public String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
