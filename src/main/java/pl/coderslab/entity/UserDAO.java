@@ -24,11 +24,12 @@ public class UserDAO {
             statement.setString(3, hashPassword(user.getPassword()));
             statement.executeUpdate();
             //Pobieramy wstawiony do bazy identyfikator, a następnie ustawiamy id obiektu user.
-            ResultSet resultSet = statement.getGeneratedKeys();
-            if (resultSet.next()) {
-                user.setId(resultSet.getInt(1));
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                if (resultSet.next()) {
+                    user.setId(resultSet.getInt(1));
+                }
+                return user;
             }
-            return user;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
