@@ -60,6 +60,9 @@ public class UserDAO {
     public void update(User user) {
         try (Connection conn = DbUtil.getConnection();
              PreparedStatement statement = conn.prepareStatement(UPDATE_USER_QUERY)) {
+            if (user == null) {
+                return;
+            }
             if (read(user.getId()) == null) {
                 return;
             }

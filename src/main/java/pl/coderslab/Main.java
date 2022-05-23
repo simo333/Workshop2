@@ -17,8 +17,10 @@ public class Main {
         newUser2.setEmail("szymon@mail2.com");
         newUser2.setPassword("haslo");
 
-        User nullUser = new User();
-        nullUser.setId(100000);
+        User nonExistingUser = new User();
+        nonExistingUser.setId(100000);
+
+        User nullUser = null;
 
         User userToUpdateCorrect = new User();
         userToUpdateCorrect.setId(1);
@@ -40,19 +42,20 @@ public class Main {
         //Testing read method
         System.out.println("READ method:");
         readUser(newUser.getId());        //User obj
-        readUser(nullUser.getId());    //null
+        readUser(nonExistingUser.getId());    //null
 
         //Testing update method
         System.out.println("UPDATE method:");
         updateUser(userToUpdateCorrect);            //Correct update
         updateUser(userToUpdateDuplicateEmail);     //Unable to update duplicated email
-        updateUser(nullUser);                       //Updating user non-existing in db
+        updateUser(nonExistingUser);                //Updating user non-existing in db
+        updateUser(nullUser);                       //Updating null value
 
         //Testing delete method
         System.out.println("DELETE method:");
         deleteUser(newUser.getId());    //Deleting existing user
         readUser(newUser.getId());      //Expect null
-        deleteUser(nullUser.getId());   //Deleting non-existing user
+        deleteUser(nonExistingUser.getId());   //Deleting non-existing user
 
         //Testing findAll method
         System.out.println("FINDALL method:");
